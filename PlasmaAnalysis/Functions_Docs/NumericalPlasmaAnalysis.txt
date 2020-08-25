@@ -1,0 +1,72 @@
+NumeicalPlasmaAnalysis
+
+Usage:
+	[Te, Vpl, Ie_sat, Ne, V_EEDF, EEDF] = NumericalPlasmaAnalysis(V,I,Ii)
+
+Used In:
+	Main()
+	
+Functions Used:
+	NumericInputs() // GUI used in function
+	savitzkyGolayFilt()
+	
+Doc String:
+    Purpose: To compute important plasma parameters using numerical
+      derivatives of the current vs. voltage data
+    
+    Pre-Conditions:
+      V: Voltage data
+      I: Current data
+      Ii: Provided ion current
+    
+    Return:
+      Te: Electron temperature
+      Vpl: Plasma Potential
+      Ie_sat: Electron saturation current
+      Ne: Electron density
+      V_EEDF_N: Voltage for electron energy distribution function
+      EEDF: Electron energy distribution function
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		flagContinue: a boolean value from the GUIs to close GUI and use inputted values 
+		e: elementary charge
+		me: mass of electron (in kg)
+		Area: area of probe (in cm^2)
+		PolyOrder: value from GUI - order of polynomial for smoothing
+		WinLen: value from GUI - frame size of smoothing
+		flagAbort: value from GUI - if numerical derivatives are not smooth enough the analysis can be aborted and Langmuir method
+			values will be used
+		UI_off: a boolean value from the GUIs to do analysis with previously inputted values
+		
+	Local:
+		N: number of inputted data values
+		Ii: if ion current is not provided (i.e. inputted to function as NaN) then it is set to an array of zeros
+		
+		V_interp: voltage interpolated to have even spacing
+		I_interp: current interpolated to have even spacing
+		
+		NumericIn: structure for GUI used in analysis
+		UserIn: guihandles of the GUI - for use getting values from GUI
+		
+		I_smooth: smoothed current data using savitzkyGolayFilt
+		dIdV: first derivative of current with respect to voltage (using savitzkyGolayFilt)
+		d2IdV2: second derivative of current with respect to voltage (using savitzkyGolayFilt)
+		
+		Abort: if the analysis is aborted then abort is set to 6 cells with NaN that gets dealt to the return variables and returned
+		
+		maxId: index at the maximum value for d2IdV2_interp to be used as a reference point between floating potential and plasma potential
+		domain: the minimum and maximum indices for the domain of the Electron Energy Distribution Function (EEDF)
+		
+		d2IdV2_EEDF: d2IdV2_interp that is in the domain of the EEDF
+	
+Structure/Logic:
+	- interpolates voltage and current data to have even spacing (subtracts fitted ion current from current data if it's provided)
+	- plots current vs voltage and brings up the GUI for the user to input polynomial order and window length of smoothing
+	- once inputs are entered the user can update the plot and inspect the numerical derivatives
+	- the maximum value of d2IdV2 is found as a reference for finding the EEDF's domain	
+	- the domain of the EEDF is found by finding the first zeros to the left and right of maxId. If a zero isn't found to the left then the domain
+		goes all the way left to the first value. If no zero is found to the right then the right side of the domain (plasma potential) is at the Nth point
+	- the plasma potential is found by getting the voltage at the zero on the right side of maxId
+	- the EEDF voltage and the d2IdV2 values for the EEDF are found and the EEDF is calculated
+	- the final values to be returned are then calculated 

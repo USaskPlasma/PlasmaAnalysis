@@ -1,0 +1,37 @@
+MakeTable
+
+Usage:
+	[t] = MakeTable(FPATH, FNAME, StrucName)
+
+Used In:
+	ReadInResults
+
+Functions Used:
+	None
+
+Doc String:
+    Purpose: Create structure of tables for data from read in data
+    
+    Pre-Conditions:
+      FPATH: Path string to files
+      FNAME: Cell array of one of more names of files
+      StrucName: Cell array of names to be given to the structures
+    
+    Return:
+      t: a structure of tables corresponding to the files and StrucName
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+		
+	Local:
+		N: length of FNAME (number of files to be read in)
+		Names: names of every value to be read in from the main results file
+
+		d: values read in from each file
+		rowNames: names for each row of the table corresponding to the average/final values and the values from the analysis on each 
+			individual I-V and d2IdV2-V curve
+
+Structure/Logic:
+	- gets number of files to be read in and sets names for values to be read in
+	- for each file the rows of the table are named then each column is named and set according to the values from the file

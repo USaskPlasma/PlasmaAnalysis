@@ -1,0 +1,59 @@
+AnalogPlasmaAnalysis
+
+Usage:
+	[Te, Vpl, Ie_sat, Ne, V_EEDF, EEDF] = AnalogPlasmaAnalysis(V,I,d2IdV2,Ii)
+	
+Used In:
+	Main()
+
+Functions Used:
+	CentralDifferenceDerivative()
+	
+Doc String:
+    Purpose: To compute important plasma parameters using analog
+      derivatives of the current vs. voltage data
+    
+    Pre-Conditions:
+      V: Voltage data
+      I: Current with respect to voltage
+      d2IdV2: Second derivative of current w/ respect to voltage
+      Ii: Provided ion current from best fit model
+    
+    Return:
+      Te: Electron temperature
+      Vpl: Plasma Potential
+      Ie_sat: Electron saturation current
+      Ne: Electron density
+      V_EEDF: Voltage for electron energy distribution function
+      EEDF: Electron energy distribution function
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		e: elementary charge
+		me: electron mass (in kg)
+		Area: probe area (in cm^2)
+		
+	Local:
+		N: number of input data points
+		
+		V_interp: voltage interpolated to have even spacing
+		I_interp: current interpolated to have even spacing
+		d2IdV2_interp: current second derivative interpolated to have even spacing
+		
+		Ii_interp: ion current interpolated to have even spacing (if provided, i.e. not NaN)
+		
+		maxId: index at the maximum value for d2IdV2_interp to be used as a reference point between floating potential and plasma potential
+		domain: the minimum and maximum indices for the domain of the Electron Energy Distribution Function (EEDF)
+		
+		d2IdV2_EEDF: d2IdV2_interp that is in the domain of the EEDF
+		
+Structure/Logic:
+	- voltage, current, current's second derivative, and ion current (if provided) are interpolated to have even spacing
+	- the maximum value of d2IdV2 is found as a reference for finding the EEDF's domain
+	- if calculated ion current is provided then it's second derivative is taken and removed from the second derivative 
+	- the domain of the EEDF is found by finding the first zeros to the left and right of maxId. If a zero isn't found to the left then the domain
+		goes all the way left to the first value. If no zero is found to the right then the right side of the domain (plasma potential) is at the Nth point
+	- the plasma potential is found by getting the voltage at the zero on the right side of maxId
+	- the EEDF voltage and the d2IdV2 values for the EEDF are found and the EEDF is calculated
+	- the final values to be returned are then calculated 
+	

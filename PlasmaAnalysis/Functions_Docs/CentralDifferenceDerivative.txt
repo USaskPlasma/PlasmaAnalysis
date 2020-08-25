@@ -1,0 +1,32 @@
+CentralDifferenceDerivative
+
+Usage:
+	y = CentralDifferenceDerivative(x, Y)
+	
+Used In:
+	AnalogPlasmaAnalysis()
+	
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: Takes the numerical derivative of Y(x) using the central
+      difference method (end points are calculated using forward and
+      backwards difference method)
+    
+    Pre-Conditions:
+      x: The indepedant variable spaced linearly
+      Y: The function of x which is being differentiated
+    
+    Return:
+      y: The numerical derivative dY(x)/dx
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+		
+	Local:
+		N: number of input data points
+	
+Structure/Logic:
+	- computes derivative using central difference method

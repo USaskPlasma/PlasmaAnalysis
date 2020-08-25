@@ -1,0 +1,74 @@
+LangmuirMethodAnalysis
+
+Usage:
+	[Te, Vpl, Ie_sat, Ne, Te_err, Vpl_err, Ie_sat_err, Ne_err] = LangmuirMethodAnalysis(V,I,Ii,Vfloat)	
+
+Used In:
+	Main()
+
+Functions Used:
+	LangmuirMethodError()
+	VoltageInputs() // GUI used in function
+
+Doc String:
+    Purpose: To calculator plasma potential and electron current
+      saturation using extrapolation with user inputs
+    
+    Pre-Conditions:
+      V: Voltage data
+      I: Corresponding current data
+      Ii: Provided ion current
+	  Vfloat: Floating potential for plotting purposes
+	  
+    Return:
+      Te: Electron Temperature
+      Vpl: Plasma potential
+      Ie_sat: Electron saturation current
+      Ne: Electron density
+      Te_err: Max absolute error in electron temperature
+      Vpl_err: Max absolute error in plasma potential
+      Ie_sat_err: Max absolute error in electron saturation current
+      Ne_err: Max absolute error in electron density
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		flagContinue: a boolean value from the GUIs to close GUI and use inputted values 
+		e: elementary charge
+		me: mass of electron (in kg)
+		Area: area of probe (in cm^2)
+		Min_Vpe: value from GUI - left edge of pre-electron saturation region
+		Max_Vpe: value from GUI - right edge of pre-electron saturation region
+		min_Ve: value from GUI - left edge of electron saturation region
+		Max_Ve: value from GUI - right edge of electron saturation region
+		UI_off: a boolean value from the GUIs to do analysis with previously inputted values
+		
+	Local:
+		LeftIx: index for left edge of voltage to cut off for plotting
+	
+		xVal: edges of x-axis after plotting log of current - for use after linear fits for Vpe and Ve are plotted 
+		yVal: edges of y-axis after plotting log of current - for use after linear fits for Vpe and Ve are plotted
+		
+		VoltageIn: structure for GUI used in analysis
+		UserIn: guihandles of the GUI - for use getting values from GUI
+		
+		legendtxt: text cell for legend of plot
+		
+		Vpe_Ids: indices of voltage data that are in the pre-electron saturation region
+		Vpe: voltage data that are in the pre-electron saturation region
+		Ipe: current data that are in the pre-electron saturation region
+		Ppe: linear fit for log of Ipe vs Vpe
+		
+		Ve_Ids: indices of voltage data that are in the electron saturation region
+		Ve: voltage data that are in the electron saturation region
+		Ie: current data that are in the electron saturation region
+		Pe: linear fit for log of Ie vs Ve
+		
+		Ne_Pre: constant for calculating electron density
+		
+Structure/Logic:
+	- subtracts fitted ion current from current data if it's provided
+	- plots log of current vs voltage for user to determine where pre-electron saturation and electron saturation regions are
+	- brings up the GUI for user to input Min_Vpe, Max_Vpe, Min_Ve, and Max_Ve
+	- plots Ppe and Pe for user to examine the quality of the fits
+	- once user is satisfied with fits (and clicks continue) return values are calculated
+	- error values are calculated using LangmuirMethodError()

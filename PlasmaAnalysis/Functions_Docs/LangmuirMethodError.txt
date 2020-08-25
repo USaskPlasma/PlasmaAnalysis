@@ -1,0 +1,55 @@
+LangmuirMethodError
+
+Usage:
+	[Te_err, Vpl_err, Ie_sat_err, Ne_err] = LangmuirMethodError(Vpe, Ipe, Ve, Ie, Ne_Pre, Te, Vpl, Ie_sat, Ne)
+	
+Used In:
+	LangmuirMethodAnalysis()
+	
+Functions Used:
+	None
+	
+Doc String:
+	Purpose: Calculate the max errors based on the confidence of fit
+      for the linear fits for Pi, Ppe, Pe
+    
+    Pre-Conditions:
+      Vpe: Voltage range for pre electron saturation current region
+      Ipe: Current for pre electron saturation current
+      Ve: Voltage range for electron saturation current region
+      Ie: Current for electron saturation current region
+      Ne_Pre: most of the calculation for electron density
+      Te: Electron Temperature
+      Vpl: Plasma potential
+      Ie_sat: Electron saturation current
+      Ne: Electron density
+    
+    Return:
+      Te_err: Error for electron temperature
+      Vpl_err: Error for plasma potential
+      Ie_sat_err: Error for electron saturation current
+      Ne_err: Error for electron density
+
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		Confidence: confidence value for confidence interval of linear fits
+		
+	Local:
+		Ppe: linear fit for log of Ipe vs Vpe
+		Pe: linear fit for log of Ie vs Ve
+		
+		Ppe_coefs: coefficients of fits of Ppe at the boundaries of the confidence interval
+		Pe_coefs: coefficients of fits of Pe at the boundaries of the confidence interval
+		
+		Vpl_err: values for error in voltage potential given every combination of coefficients - later becomes single value for the maximum error
+		Ie_sat_err: values for error in electron saturation current given every combination of coefficients - later becomes single value for the maximum error
+		Ne_err: values for error in electron density given every combination of coefficients - later becomes single value for the maximum error
+		Te_err: values for error in given the two possible slopes of the pre-electron saturation region - later becomes single values for the maximum error
+
+Structure/Logic:
+	- gets coefficients at edges of confidence interval for linear fits Ppe and Pe
+	- calculates electron temperature error based on the two slopes of the pre-electron saturation region fit (Ppe)
+	- pre-allocates other error values
+	- calculates all possible error values corresponding to max and min fites for Ppe and Pe
+	- takes the maximum error of all values

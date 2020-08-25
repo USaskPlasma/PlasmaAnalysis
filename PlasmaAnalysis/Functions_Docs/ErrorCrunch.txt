@@ -1,0 +1,39 @@
+ErrorCrunch
+
+Usage:
+	X = ErrorCrunch( x )
+	
+Used In:
+	Main()
+	getAvgData()
+	
+Functions Used:
+	None
+
+Doc String:
+    Purpose: Computes the mean and the error associated with the
+      confidence interval
+    
+    Pre-Conditions:
+      x: Array of values and their experimental error to compute the mean 
+          and error of. First column is of values from analysis and the
+          second is of the corresponding values experimental error
+
+    
+    Return:
+      X(1): Mean values
+      X(2): Error associated with confidence interval
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		Confidence: confidence interval for error values to return
+		
+	Local:
+		N: number of data values (rows) entered
+		SEM: standard error in values
+		ts: T-Score 
+
+Structure/Logic:
+	- mean of values is taken
+	- Standard error and T-Score is calculated for error bounds
+	- the experimental error is averaged and added onto the error bounds

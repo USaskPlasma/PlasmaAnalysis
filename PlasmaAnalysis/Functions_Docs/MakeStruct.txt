@@ -1,0 +1,37 @@
+MakeStruct
+
+Usage:
+	[r, a] = MakeStruct(FPATH, FNAME, StrucName)
+
+Used In:
+	ReadInResults
+
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: Create structure for data from read in data
+    
+    Pre-Conditions:
+      FPATH: Path string to files
+      FNAME: Cell array of one of more names of files
+      StrucName: Cell array of names to be given to the structures
+    
+    Return:
+      r: a structure for individual runs for each file
+      a: a structure for average/final values as well as ion current or
+          EEDFs of files are present
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+		
+	Local:
+		N: length of FNAME (number of files to be read in)
+		Names: names of every value to be read in from the main results file
+		
+		d: values read in from each file
+		
+Structure/Logic:
+	- gets number of files to be read in and sets names for values to be read in
+	- reads in values and sets them to the corresponding structure based on file name and name of value

@@ -1,0 +1,166 @@
+Main
+
+Usage:
+	Main( Radius, Length, IonAMU, ...
+		  V_prefix, I_prefix, ...
+		  Iterations, ...
+		  LangmuirAnalysis, AnalogAnalysis, NumericalAnalysis, ...
+		  V_error_id, I_error_id, d2IdV2_error_id, ...
+		  FileName, Save_Avg_IV_Data, EEDF_Out, Ion_Current_Out);
+		  
+Used In:
+	PlasmaAnalysis
+
+Functions Used:
+	Data inputs and formatting - constant values:
+		DataSorter()
+		
+	Data calculations, error, and collection:
+		VfloatFinder()
+		
+		AnalogPlasmaAnalysis()
+		NumericalPlasmaAnalysis()
+		LangmuirMethodAnalysis()
+		
+		OMLanalysis()
+		ABRanalysis()
+		BRLanalysis()
+		
+		OMLcurrent()
+		ABRcurrent()
+		BRLcurrent()
+		
+		getAvgData()
+		
+	Outputs:
+		ErrorCrunch()
+		
+Doc String:
+    Main: does the things ... is the main function
+    
+    Pre-Conditions:
+      Input-Parameters:
+          
+      Radius: probe radius in cm
+      Length: probe length in cm
+      IonAMU: ion mass in atomic mass unit
+      V_prefix: factor for correcting voltage input to volts
+      I_prefix: factor for correction current input to amps
+      LangmuirAnalysis: boolean value for if Langmuir analysis is to be
+          done
+      AnalogAnalysis: boolean value for if analysis of analog derivatives
+          is do be done
+      NumericalAnalysis: boolean value for if analysis using numerical
+          derivatives is to be done
+	  IonAnalysis: integer to specify which electron current analysis 
+          is used for ion current analysis (3 for A, 2 for N, 1 for LM)
+      V_error_id: column for voltage error to be read in from file
+      I_error_id: column for current error to be read in from file
+      d2IdV2_error_id: column for analog d^2I/dV^2 to be read from file
+      FileName: optional parameter for what output files are to be named
+      Save_Avg_IV_Data: boolean to determine if average voltage, current,
+          and current second derivative and their errors should be saved
+          to a .csv
+      EEDF_Out: value to determine if EEDF output files are to be made
+      Ion_Current_Out: boolean value for if ion current data output file
+          is to be made
+    
+      File-input:
+      
+      Input file is to be a comma-separated value file with the I-V curve
+      number in the first column, voltage data in the second, current
+      data in the third, and analog second derivative in the forth column
+      (if provided).
+    
+    Post-Conditions:
+      A file will be created in the local directory 'Results'
+      the file contains values like electron temperature, ion density,
+      plasma potential, etc.
+      
+      Files for the EEDF will be created in the same directory will be
+      made depending on EEDF_Out. First column is ... voltage (in volts),
+      second is the EEDF values. The file will end in _EEDF_A or _EEDF_N
+      corresponding to the EEDF found from analog derivatives or
+      numerical derivatives
+    
+      A file for ion current data corresponding to the best ion current
+      fit will be made depending on Ion_Current_Out. First column is
+      probe voltage (in volts), second is ion current (in amps). The file
+      will end in _Iion.
+    
+      All files can be read into appropriate Matlab structures using the
+      ReadInResults.m script.
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		e: elementary charge
+		me: mass of electron (in kg)
+		e0: vacuum permittivity
+		IonMass: ion mass (in kg)
+		UI_off: a boolean value from the GUIs to do analysis with previously inputted values
+		ContinueRuns: flag to do analyses without GUI prompting when true
+		
+	Local: some variables will be in other sections - only the first section it appears will be mentioned
+		Data inputs and formatting - constant values:
+			FNAME: name of selected text file with input data
+			FPATH: path to selected text file with input data
+			TextData: data read from selected text file
+			
+			
+			ScanNum: numbers corresponding to each data set
+			V: voltage data
+			I: current data
+			V_err: error in voltage data
+			I_err: error in current data
+			d2IdV2: current analog second derivative with respect to voltage
+			d2idV2_err: error in current analog second derivative with respect to voltage
+			
+			DataSets: number of data sets to analyze 
+			Data_Out: Preallocation of data values to be obtained from the analysis 
+					
+		Data calculations, error, and collection:				
+			Ii: ion current - set to NaN so the analyses skip subtracting ion current from data
+			NumericalTerminate: if true then numerical analysis is skipped
+			LangmuirBackup: if numerical analysis is terminated then LangmuirAnalysis is used
+			
+			Data_Out: array for storing values obtained from analysis
+			
+			Ii_Out: cell array of calculated ion current from each data set
+			IV_Avg_Data: input data averaged for later writing to a file			
+		
+		Outputs:						
+			V_EEDF_A: EEDF domain from analog analysis (in volts)
+			EEDF_A: EEDF values from analog analysis (in eV)
+		
+			NaNIxs: find values of interpolated EEDF and Ii that are NaN (which indicates that that part of the domain is out of bounds)
+			
+			V_EEDF_N EEDF domain from numerical analysis (in volts)
+			EEDF_N: EEDF values from numerical analysis (in eV)
+			
+			V_Out: voltage values corresponding to ion current
+			Ii_Out: ion current interpolated to V_Out
+			Ii_String: string for the ion current used in fitting
+		
+Structure/Logic:
+	Data inputs and formatting - constant values:
+		- gets input file and splits inputs into separate columns
+		- each column is split into cells corresponding to each data set 
+		- some constants and simple values are given
+	
+	Data calculations, error, and collection:
+		- preallocates all values to be obtained from analysis to NaN so that values that aren't calculated are written to the output file as NaN
+			in order to indicate that they weren't calculated or able to be obtained
+		- preallocates some simple values to NaN/false
+		- for all iteration the analyses corresponding to user inputs are conducted
+		- then error calculations are done based on what experimental errors in data input are provided
+		- next, all values calculated from that data set are stored
+		- after all data sets are analyzed average data of inputs are calculated if user requested to save average data
+	
+	Outputs:
+		- sets the file name of output files depending on user-input
+		- calculates averages and error values for values obtained from the analyses
+		- values are written to results
+		- if user wants average values of input then IV_Avg_Data is written to a file
+		- EEDF get formatted and written if user requested them
+		- Ion current is interpolated and averaged and written to a file if user requested ion current
+		

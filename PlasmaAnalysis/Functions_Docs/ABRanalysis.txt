@@ -1,0 +1,65 @@
+ABRanalysis
+
+Usage:
+	[N, N_err, Te, Te_err, Rsq] = ABRanalysis(V, I, Vfloat, Vpl, Te, Ne)
+
+Used In:
+	Main()
+
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: Use ABR theory to calculate plasma density by fitting a
+      function of probe potential to the ion current by varrying density
+    
+    Pre-Conditions:
+      V: Voltage data
+      I: Current data
+      Vfloat: Plasma's floating potential
+      Vpl: Plasma potential
+      Te: Electron temperature
+      Ne: Electron density (for estimating plasma density)
+    
+    Return:
+      N: The plasma density
+      N_err: The numerical error in N associated with fitting ABR current
+          to the measured ion current
+      Te: Fitted electron temperature
+      Te_err: Error in electron temperature 
+      Rsq: the Rsquared value for the model's fit
+
+Intermediate Variables (in Order of Appearance):
+	Global Variable:
+		Radius: probe radius (in cm)
+		Confidence: confidence interval for error values to return
+		IonAMU: mass of ions in atomic mass units
+		Length: probe length (in cm)
+		Te_ABR: electron temperature used from fitting the ABR model to the ion current
+			that is used in ABRcurrent()
+		
+	Local:
+		first_id: index for the left-most point of voltage domain for model fitting
+		float_id: index for the right-most point of voltage domain for model fitting
+		Vi: ion voltage with respect to plasma potential
+		Ii: ion current in mA
+		
+		I_c: constant for model
+		Xi_c: constant for model
+		
+		modelFun: ABR model for variable ion density and electron temperature
+		ABRModel: modelFun fit to the ion current 
+		ABR_coeffs: coefficients from fit model (Ion density and electron temperature)
+		
+		modelFunN: ABR model for variable ion density (and not electron temperature)
+		ABRModelN: modelFunN for to the ion current								
+
+Structure/Logic:
+	- the voltage and current data is selected for the fitting process.
+	- some constants for the model are calculated
+	- an attempt is made to fit the model to the ion current with varying ion density and electron temperature
+	- electron density and electron temperature from electron characteristics are used for initial values
+	- if it is found that the electron temperature is too different from that found using electron characteristics
+		then the model is fit again with only the ion density to be fitted and electron temperature will be returned as NaN
+	- if the ion density is find to be 5 times more or 5 times less than the ion density then all values of NaN are returned (indicated the fit failed)
+	- once an acceptable model has been fit the returned values are calculated from the fit 

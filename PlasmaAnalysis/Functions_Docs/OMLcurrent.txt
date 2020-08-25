@@ -1,0 +1,33 @@
+OMLcurrent
+
+Usage:
+	Ii = OMLcurrent(Vi, N)
+
+Used In:
+	Main()
+	
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: return the OML current for given voltage and plasma density
+    
+    Pre-Conditions:
+      Vi: Measured probe potential corrected for plasma potential
+      N: Plasma density
+    
+    Return:
+      Ii: the ion current for Vi according to the OML model
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		Area: probe area (in cm^2)
+		IonAMU: mass of ions in atomic mass units
+			
+	Local:
+		None
+			
+Structure/Logic:
+	- negative voltage values are set to 0
+	- OML-model ion current is calculated and returned
+

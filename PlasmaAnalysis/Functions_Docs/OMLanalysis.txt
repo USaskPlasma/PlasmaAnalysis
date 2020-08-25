@@ -1,0 +1,57 @@
+OMLanalysis
+
+Usage:
+	[N, N_err, Rsq] = OMLanalysis(V, I, Vfloat, Vpl, Te, Ne)
+
+Used In:
+	Main()
+	
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: Use OML theory to calculate plasma density by fitting a
+      function of probe potential to the ion current by varrying density
+    
+    Pre-Conditions:
+      V: Voltage data
+      I: Current data
+      Vfloat: Plasma's floating potential 
+      Vpl: Plasma potential
+      Te: Electron temperature
+      Ne: Electron density for initial guess
+    
+    Return:
+      N: The plasma density
+      N_err: The numerical error in N associated with fitting OML current
+          to the measured ion current
+      Rsq: the Rsquared value for the model's fit
+	  
+Intermediate Variables (in Order of Appearance):
+	Global:
+		Area: probe area (in cm^2)
+		Confidence: confidence interval for error values to return
+		IonAMU: mass of ions in atomic mass units
+		
+	Local:
+		float_id: index for the right-most point of voltage domain for model fitting
+		Vi: ion voltage with respect to plasma potential
+		Ii: ion current in mA
+		
+		OML_coeff: constant for model
+		Grad: gradient of model for fitting purposes (gradient is constant w/ respect to ion density)
+		
+		F: OML-model ion-current minus ion current data (for least-squared solviing)
+		nargout: a value used in Matlab's lsqnonlin()
+		Gradient: the gradient returned to lsqnonlin()
+		
+		options: options for the non-linear least-squares fitting function
+		N_factor: plasma density times 1e-11
+		resnorm: squared norm of the residual
+		residual: Value of F at solution
+
+Structure/Logic:
+	- the voltage and current data is selected for the fitting process.
+	- some constants for the model are calculated
+	- the model fitted to the ion current data by varying the ion density
+	- output values are calculated and returned

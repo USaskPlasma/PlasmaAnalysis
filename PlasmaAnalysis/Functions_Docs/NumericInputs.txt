@@ -1,0 +1,3 @@
+NumericInputs is a GUI used in NumericalPlasmaAnalysis()
+
+It's usage is explained in ReadMe.txt

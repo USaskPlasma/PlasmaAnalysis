@@ -1,0 +1,40 @@
+DataSorter
+
+Usage:
+	X = DataSorter(c, ScanNum)
+Used In:
+	Main()
+	
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: Serperate individual scans into cells for individual
+      analysis. Also chops off first and last Data points
+    
+    Pre-Conditions:
+      x: Data column to manipulate
+      ScanNum: column corresponding to x which numbers the data set
+    
+    Return:
+      X: The input data sorted into columns and put in cells 
+          corresponding to the scan number
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+	
+	Local:
+		ScanId: incremented value for the current data set
+		ScanIx1: value corresponding to the first index of the ScanId		
+		
+		MoreScans: boolean for when to stop
+		
+		ScanIx2: value corresponding to the last index of the ScanId
+
+Structure/Logic:
+	- if ScanNum is NaN then it's assumed that there's only one data set for this analysis
+	- the data (x) and ScanNum are searched through in order to find the which indices correspond to each data set
+	- the data from the data set is placed in a cell
+	- the first and last values of the data are removed
+

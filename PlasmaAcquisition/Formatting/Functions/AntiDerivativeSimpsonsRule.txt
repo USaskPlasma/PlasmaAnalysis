@@ -1,0 +1,35 @@
+AntiDerivativeSimpsonsRule
+
+Usage:
+	Y = AntiDerivativeSimpsonsRule(x,y)
+
+Used In:
+	ReadInData()
+	
+Functions Used:
+	None
+	
+Doc String:
+	Purpose: Take the numerical anti-derivative of y (i.e. integral of y
+      from [x(1),x] using Simpson's Rule and quadratic interpolation)
+    
+    Notice: this function won't check if your domain is linearly spaced!
+    
+    Pre-Conditions:
+      x: Independant linearly-spaced variable with an odd number of 
+          points (and >1 point)
+      y: Dependant variable with values corresponding to x
+    
+    Return:
+      Y: Anti-derivative computed at all points for x
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+		
+	Local:
+		N: number of data points
+
+Structure/Logic:
+	Computes the anti-derivative of y for all odd points using Simpson's rule and 
+		quadratic interpolation for the even values

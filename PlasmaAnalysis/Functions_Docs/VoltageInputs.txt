@@ -1,0 +1,3 @@
+VoltageInputs is a GUI used in LangmuirMethodAnalysis()
+
+It's usage is explained in ReadMe.txt

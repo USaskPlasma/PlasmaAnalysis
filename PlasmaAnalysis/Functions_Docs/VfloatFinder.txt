@@ -1,0 +1,39 @@
+VfloatFinder
+
+Usage:
+	Vfloat = VfloatFinder(V,I);
+	
+Used In:
+	Main()
+
+Functions Used:
+	None.
+	
+Doc String:
+	Purpose: Finds the floating potential (first root) of the voltage/
+      current data by finding the point where I>0 and then interpolating
+      linearly to find root.
+    
+    Pre-Conditions:
+      V: Voltage
+      I: Current
+    
+    Return:
+      Vfloat: The floating potential of the plasma
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+	
+	Local:
+		fp_id: The first index in which the current data is > 0
+		Vfp: 3 voltage data points surrounding fp_id
+		Ifp: 3 current data points surrounding fp_id
+		Pf: Polynomial coefficients of linear fit for Vfp and Ifp 
+
+Structure/Logic:
+	- finds the first index that I is >= 0 and assigns the value to fp_id
+	- gets three voltage (Vfp) and current (Ifp) data points around fp_id
+	- gets coefficients for linear fit of Vfp and Ifp
+	- solves the root of the the linear fit to acquire Vfloat 
+	

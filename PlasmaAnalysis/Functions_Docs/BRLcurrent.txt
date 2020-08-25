@@ -1,0 +1,40 @@
+BRLcurrent
+
+Usage:
+	Ii = BRLcurrent(Vi, N)
+
+Used In:
+	Main()
+	
+Functions Used:
+	None
+	
+Doc String:
+    Purpose: return the BRL current for given voltage and plasma density
+    
+    Pre-Conditions:
+      Vi: Measured probe potential corrected for plasma potential
+      N: Plasma density
+    
+    Return:
+      Ii: the ion current for Vi according to the BRL model
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		Radius: probe radius (in cm)
+		Area: probe area (in cm^2)
+		IonAMU: mass of ions in atomic mass units
+		Te_BRL: electron temperature used from fitting the BRL model to the ion current
+			that is used in BRLcurrent()
+			
+	Local:
+		Te: electron temperature
+		eta: ion voltage divided by electron temperature
+		
+		BRL_coeff: constant for model
+		Xi_c: constant for model
+			
+Structure/Logic:
+	- voltage data is divided by Te
+	- constants are calculated
+	- BRL-model ion current is calculated and returned

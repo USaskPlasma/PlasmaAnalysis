@@ -1,0 +1,66 @@
+getAvgData
+
+Usage:
+	IV_Avg_Data = getAvgData(V,V_err,I,I_err,d2IdV2,d2IdV2_err)
+
+Used In:
+	Main()
+	
+Functions Used:
+	ErrorCrunch()
+	
+Doc String:
+    Purpose: get average data and errors for V, I, and d2IdV2 if user
+      wants these outputs
+    
+    Pre-Conditions:
+      V: all voltage data
+      V_err: all voltage experimental error data
+      I: all current data
+      I_err: all current experimental error data
+      d2IdV2: all analog second derivative data
+      d2IdV2_err: all analog second derivative experimental error data
+
+Intermediate Variables (in Order of Appearance):
+	Global:
+		None
+		
+	Local:
+		N: number of data sets
+		
+		Vb_s: minimum, maximum, and voltage step of each data sets
+		MinV: highest minimum voltage of all data sets
+		MaxV: lowest maximum voltage of all data sets
+		Step: average voltage step from all data sets
+		
+		V_Avg: voltage data created from MinV to MaxV with a voltage step of Step
+		L: number of values in V_Avg
+		
+		V_err_Avg: average error values in the voltage
+		
+		I_Set: current from each data set interpolated to V_Avg
+		I_err_Set: current error from each data set interpolated to V_Avg
+		
+		I_Avg_Data: a conglomeration of I_Avg and I_err_Avg
+		
+		I_Avg: average values of I_Set
+		I_err_Avg: average values of I_err_Set + error associated with confidence interval
+		
+		d2I_Set: current's analog second derivative from each data set interpolated to V_Avg
+		d2I_err_Set: current's analog second derivative error from each data set interpolated to V_Avg
+		
+		d2I_Avg_Data: a conglomeration of d2I_Avg and d2I_err_Avg
+		
+		d2I_Avg: average values of d2I_Set
+		d2I_err_Avg: average values of d2I_err_Set + error associated with confidence interval			
+		
+Structure/Logic:
+	- minimum, maximum, and step values are found for all voltage data sets
+	- new voltage column is created from largest minimum to smallest maximum with a step size that the average of the step values from all voltage data sets
+	- the length of this new column of voltage values is taken for later use
+	- if voltage error is provided then the average error values are found; otherwise, V_err_Avg is set to a column of NaNs
+	- arrays for the current and current error are set to the values from each data set interpolated to V_Avg
+	- each average value for current and it's error is found and placed in a single column
+	- this column is then broken down into average current and current error columns
+	- the same is done to the current's analog second derivative as the current (if it's provided)
+	- the voltage, current, and d2IdV2 and the associated errors are arranged into columns and returned
